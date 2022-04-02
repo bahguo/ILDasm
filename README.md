@@ -1,166 +1,185 @@
-# ILMerge
+---
+title: "Ildasm.exe (IL Disassembler)"
+description: Use Ildasm.exe (IL Disassembler), which takes a portable executable (PE) file containing intermediate language (IL) code, and makes a text file for Ilasm.exe.
+ms.date: "03/30/2017"
+helpviewer_keywords: 
+  - "PE files, MSIL Disassembler"
+  - "portable executable files, MSIL Disassembler"
+  - "Ildasm.exe"
+  - "MSIL Disassembler"
+  - "text files produced by MSIL Disassembler"
+  - "disassembling file for MSIL Assembler input"
+ms.assetid: db27f6b2-f1ec-499e-be3a-7eecf95ca42b
+---
+# Ildasm.exe (IL Disassembler)
 
-[![NuGet](https://img.shields.io/nuget/v/ILMerge.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/ILMerge/)
+The IL Disassembler is a companion tool to the IL Assembler (*Ilasm.exe*). *Ildasm.exe* takes a portable executable (PE) file that contains intermediate language (IL) code and creates a text file suitable as input to *Ilasm.exe*.
 
-ILMerge is a utility that merges multiple .NET assemblies into a single assembly.
-It is freely available for use and is available as a [NuGet package](https://www.nuget.org/packages/ilmerge).
+This tool is automatically installed with Visual Studio. To run the tool, use [Visual Studio Developer Command Prompt or Visual Studio Developer PowerShell](/visualstudio/ide/reference/command-prompt-powershell).
 
-If you have any problems using it, please get in touch. (mbarnett _at_ microsoft _dot_ com).
-But first try reading [the documentation](ilmerge-manual.md).
+At the command prompt, type the following:
 
-ILMerge takes a set of input assemblies and merges them into one target assembly.
-The first assembly in the list of input assemblies is the primary assembly.
-When the primary assembly is an executable,
-then the target assembly is created as an executable with the same entry point as the primary assembly.
-Also, if the primary assembly has a strong name, and a .snk file is provided,
-then the target assembly is re-signed with the specified key so that it also has a strong name.
+## Syntax
 
-ILMerge is packaged as a console application.
-But all of its functionality is also available programmatically.
-
-There are several options that control the behavior of ILMerge.
-See the documentation that comes with the tool for details.
-
-The current version is 3.0.29 (released on 10 April 2019).
-NOTE: There is no longer a version of ILMerge that runs in the v1.1 runtime.
-
-ILMerge runs in the v4.0 .NET Runtime,
-but it is also able to merge assemblies from other framework versions using the `/targetplatformoption`.
-Please see the documentation.
-(However, it can merge PDB files only for v2 (and later) assemblies.)
-
-Currently, ILMerge works only on Windows-based platforms. It does not yet support Rotor or Mono.
-
-If you use ASP.NET v2.0, then it provides a tool (based on ILMerge) to combine assemblies created during precompilation.
-You can get more details from the [ASP.NET web site](http://msdn.microsoft.com/en-us/library/bb397866.aspx).
-
-## Installation
-
-As noted on the [ilmerge NuGet page](https://www.nuget.org/packages/ilmerge), the package can be installed from the Visual Studio environment. Expand the project container in the `Solution Explorer` view. Right click on `references` and select `Manage NuGet Packages`
-
-![NuGet References Setting](images/NuGet_references_setting.png)
-
-Ensure the `Package source` is set to `nuget.org`
-
-![NuGet Package source](images/NuGet_Package_source.png)
-
-Next, click on Tools - NuGet Package Manager - Package Manager Console. Ensure the `Package source` is also set to `nuget.org` 
-
-![NuGet Pakage Manager Console source.PNG](images/NuGet_Package_Manager_Console_source.png)
-
-To install for the project, use the Install-Package command:
-
-```
-Install-Package ilmerge -Version 3.0.29
+```console
+ildasm [options] [PEfilename] [options]
 ```
 
-## Usage
+## Parameters
 
-### MSBuild
+The following options are available for *.exe*, *.dll*, *.obj*, *.lib*, and *.winmd* files.
 
-ILMerge can be used in MSBuild using the NuGet package:
+| Option | Description |
+| ------ | ----------- |
+|**/out=** `filename`|Creates an output file with the specified `filename`, rather than displaying the results in a graphical user interface.|
+|**/rtf**|Produces output in rich text format. Invalid with the **/text** option.|
+|**/text**|Displays the results to the console window, rather than in a graphical user interface or as an output file.|
+|**/html**|Produces output in HTML format. Valid with the **/output** option only.|
+|**/?**|Displays the command syntax and options for the tool.|
 
-```xml
-<Project Sdk="Microsoft.NET.Sdk">
+The following additional options are available for *.exe*, *.dll*, and *.winmd* files.
 
-  <ItemGroup>
-    <PackageReference Include="ILMerge" Version="3.0.29" />
-  </ItemGroup>
+| Option | Description |
+| ------ | ----------- |
+|**/bytes**|Shows actual bytes, in hexadecimal format, as instruction comments.|
+|**/caverbal**|Produces custom attribute blobs in verbal form. The default is binary form.|
+|**/linenum**|Includes references to original source lines.|
+|**/nobar**|Suppresses the disassembly progress indicator pop-up window.|
+|**/noca**|Suppresses the output of custom attributes.|
+|**/project**|Displays metadata the way it appears to managed code, instead of the way it appears in the native Windows Runtime. If `PEfilename` is not a Windows metadata (*.winmd*) file, this option has no effect. See [.NET Framework Support for Windows Store Apps and Windows Runtime](/previous-versions/dotnet/framework/cross-platform/support-for-windows-store-apps-and-windows-runtime).|
+|**/pubonly**|Disassembles only public types and members. Equivalent to **/visibility:PUB**.|
+|**/quoteallnames**|Includes all names in single quotes.|
+|**/raweh**|Shows exception handling clauses in raw form.|
+|**/source**|Shows original source lines as comments.|
+|**/tokens**|Shows metadata tokens of classes and members.|
+|**/visibility:** `vis`[+`vis`...]|Disassembles only types or members with the specified visibility. The following are valid values for `vis`:<br /><br /> **PUB** — Public<br /><br /> **PRI** — Private<br /><br /> **FAM** — Family<br /><br /> **ASM** — Assembly<br /><br /> **FAA** — Family and Assembly<br /><br /> **FOA** — Family or Assembly<br /><br /> **PSC** — Private Scope<br /><br /> For definitions of these visibility modifiers, see <xref:System.Reflection.MethodAttributes> and <xref:System.Reflection.TypeAttributes>.|
 
-  <Target Name="ILMerge">
-    <!-- the ILMergePath property points to the location of ILMerge.exe console application -->
-    <Exec Command="$(ILMergeConsolePath) /out:Merged.dll File1.dll File2.dll" />
-  </Target>
+The following options are valid for *.exe*, *.dll*, and *.winmd* files for file or console output only.
 
-</Project>
+| Option | Description |
+| ------ | ----------- |
+|**/all**|Specifies a combination of the **/header**, **/bytes**, **/stats**, **/classlist**, and **/tokens** options.|
+|**/classlist**|Includes a list of classes defined in the module.|
+|**/forward**|Uses forward class declaration.|
+|**/headers**|Includes file header information in the output.|
+|**/item:** `class`[**::** `member`[`(sig`]]|Disassembles the following depending upon the argument supplied:<br /><br /> -   Disassembles the specified `class`.<br />-   Disassembles the specified `member` of the `class`.<br />-   Disassembles the `member` of the `class` with the specified signature `sig`. The format of `sig` is:<br />     [`instance`] `returnType`(`parameterType1`, `parameterType2`, …, `parameterTypeN`)<br />     **Note** In the .NET Framework versions 1.0 and 1.1, `sig` must be followed by a closing parenthesis: `(sig)`. Starting with the Net Framework 2.0 the closing parenthesis must be omitted: `(sig`.|
+|**/noil**|Suppresses IL assembly code output.|
+|**/stats**|Includes statistics on the image.|
+|**/typelist**|Produces the full list of types, to preserve type ordering in a round trip.|
+|**/unicode**|Uses Unicode encoding for the output.|
+|**/utf8**|Uses UTF-8 encoding for the output. ANSI is the default.|
+
+The following options are valid for *.exe*, *.dll*, *.obj*, *.lib*, and *.winmd* files for file or console output only.
+
+| Option | Description |
+| ------ | ----------- |
+|**/metadata**[=`specifier`]|Shows metadata, where `specifier` is:<br /><br /> **MDHEADER** — Show the metadata header information and sizes.<br /><br /> **HEX** — Show information in hex as well as in words.<br /><br /> **CSV** — Show the record counts and heap sizes.<br /><br /> **UNREX** — Show unresolved externals.<br /><br /> **SCHEMA** — Show the metadata header and schema information.<br /><br /> **RAW** — Show the raw metadata tables.<br /><br /> **HEAPS** — Show the raw heaps.<br /><br /> **VALIDATE** — Validate the consistency of the metadata.<br /><br /> You can specify **/metadata** multiple times, with different values for `specifier`.|
+
+The following options are valid for *.lib* files for file or console output only.
+
+| Option | Description |
+| ------ | ----------- |
+|**/objectfile**=`filename`|Shows the metadata of a single object file in the specified library.|
+
+> [!NOTE]
+> All options for *Ildasm.exe* are case-insensitive and recognized by the first three letters. For example, **/quo** is equivalent to **/quoteallnames**. Options that specify arguments accept either a colon (:) or an equal sign (=) as the separator between the option and the argument. For example, **/output:** *filename* is equivalent to **/output=** *filename*.
+
+## Remarks
+
+*Ildasm.exe* only operates on PE files on disk. It does not operate on files installed in the global assembly cache.
+
+The text file produced by *Ildasm.exe* can be used as input to the IL Assembler (*Ilasm.exe*). This is useful, for example, when compiling code in a programming language that does not support all the runtime metadata attributes. After compiling the code and running its output through *Ildasm.exe*, the resulting IL text file can be hand-edited to add the missing attributes. You can then run this text file through the IL Assembler to produce a final executable file.
+
+> [!NOTE]
+> Currently, you cannot use this technique with PE files that contain embedded native code (for example, PE files produced by Visual C++).  
+
+You can use the default GUI in the IL Disassembler to view the metadata and disassembled code of any existing PE file in a hierarchical tree view. To use the GUI, type **ildasm** at the command line without supplying the *PEfilename* argument or any options. From the **File** menu, you can navigate to the PE file that you want to load into *Ildasm.exe*. To save the metadata and disassembled code displayed for the selected PE, select the **Dump** command from the **File** menu. To save the hierarchical tree view only, select the **Dump Treeview** command from the **File** menu. For a detailed guide to loading a file into *Ildasm.exe* and interpreting the output, see the *Ildasm.exe* Tutorial, located in the Samples folder that ships with the Windows SDK.
+
+If you provide *Ildasm.exe* with a *PEfilename* argument that contains embedded resources, the tool produces multiple output files: a text file that contains IL code and, for each embedded managed resource, a .resources file produced using the resource's name from metadata. If an unmanaged resource is embedded in *PEfilename*, a .res file is produced using the filename specified for IL output by the **/output** option.
+
+> [!NOTE]
+> *Ildasm.exe* shows only metadata descriptions for *.obj* and *.lib* input files. IL code for these file types is not disassembled.
+
+You can run *Ildasm.exe* over an.exe or *.dll* file to determine whether the file is managed. If the file is not managed, the tool displays a message stating that the file has no valid common language runtime header and cannot be disassembled. If the file is managed, the tool runs successfully.
+
+## Version Information
+
+Starting with the .NET Framework 4.5, *Ildasm.exe* handles an unrecognized marshal BLOB (binary large object) by displaying the raw binary content. For example, the following code shows how a marshal BLOB generated by a C# program is displayed:
+
+```csharp
+public void Test([MarshalAs((short)70)] int test) { }
 ```
 
-Edit the project `.csproj` or `.vbproj` files (inside the respective `<Project> .. </Project>` tags, typically at the end of the file. If compiling for a specific target, use explicit directories such as `Bin\x64\Release`:
-
-
-```
-<ItemGroup>
-    <PackageReference Include="ILMerge" Version="3.0.29" />
-  </ItemGroup>
-
-  <Target Name="ILMerge">
-    <!-- the ILMergePath property points to the location of ILMerge.exe console application -->
-    <Exec Command="$(ILMergeConsolePath) Bin\x64\Release\myapp.exe  /out:myapp.exe Bin\x64\Release\File1.dll Bin\x64\Release\File2.dll Bin\x64\Release\File3.dll " />
-  </Target>
-```
-Although whitespace is usually ignored in XML files, in this case the exact text is processed as a DOS command, so to improve readability, use the carat `^` (shift 6) line extenders:
-
-```
-<ItemGroup>
-    <PackageReference Include="ILMerge" Version="3.0.29" />
-  </ItemGroup>
-
-  <Target Name="ILMerge">
-    <!-- the ILMergePath property points to the location of ILMerge.exe console application -->
-    <Exec Command="$(ILMergeConsolePath) Bin\x64\Release\myapp.exe ^
-    /out:myapp.exe ^
-    Bin\x64\Release\File1.dll ^
-    Bin\x64\Release\File2.dll ^ 
-    Bin\x64\Release\File3.dll " />
-  </Target>
+```il
+// IL from Ildasm.exe output
+.method public hidebysig instance void Test(int32  marshal({ 46 }) test) cil managed
 ```
 
-The DOS dir /b option can be helpful in listing all of the dependencies:
-```
-dir bin\x64\Debug\*.dll /b
-```
+Starting with the .NET Framework 4.5, *Ildasm.exe* displays attributes that are applied to interface implementations, as shown in the following excerpt from *Ildasm.exe* output:
 
-From Visual Studio Developer Command Prompt:
-```ps1
-# Download/install the package reference
-msbuild /t:Restore
-
-# Run the ILMerge target
-msbuild /t:ILMerge
-```
-
-### To run `ILMerge` in a batch file:
-
-The Visual Studio Developer Command Prompt is not needed here, as `msbuild` is not used.
-
-```
-@echo off
-
-:: this script needs https://www.nuget.org/packages/ilmerge
-
-:: set your target executable name (typically [projectname].exe)
-SET APP_NAME=myapp.exe
-
-:: Set build, used for directory. Typically Release or Debug
-SET ILMERGE_BUILD=Debug
-
-:: Set platform, typically x64
-SET ILMERGE_PLATFORM=x64
-
-:: set your NuGet ILMerge Version, this is the number from the package manager install, for example:
-:: PM> Install-Package ilmerge -Version 3.0.29
-:: to confirm it is installed for a given project, see the packages.config file
-SET ILMERGE_VERSION=3.0.29
-
-:: the full ILMerge should be found here:
-SET ILMERGE_PATH=%USERPROFILE%\.nuget\packages\ilmerge\%ILMERGE_VERSION%\tools\net452
-:: dir "%ILMERGE_PATH%"\ILMerge.exe
-
-echo Merging %APP_NAME% ...
-
-:: add project DLL's starting with replacing the FirstLib with this project's DLL
-"%ILMERGE_PATH%"\ILMerge.exe Bin\%ILMERGE_PLATFORM%\%ILMERGE_BUILD%\%APP_NAME%  ^
-  /lib:Bin\%ILMERGE_PLATFORM%\%ILMERGE_BUILD%\ ^
-  /out:%APP_NAME% ^
-  FirstLib.dll ^
-  mylib1.dll ^
-  Microsoft.lib2.dll ^
-  SomeOtherLib.dll ^
-  \otherlibdir\otherlib.dll 
-
-
-:Done
-dir %APP_NAME%
+```il
+.class public auto ansi beforefieldinit MyClass
+  extends [mscorlib]System.Object
+  implements IMyInterface
+  {
+    .interfaceimpl type IMyInterface
+    .custom instance void
+      [mscorlib]System.Diagnostics.DebuggerNonUserCodeAttribute::.ctor() = ( 01 00 00 00 )
+      …
 ```
 
+## Examples
 
+The following command causes the metadata and disassembled code for the PE file `MyHello.exe` to display in the *Ildasm.exe* default GUI.
+
+```console
+ildasm myHello.exe
+```
+
+The following command disassembles the file `MyFile.exe` and stores the resulting IL Assembler text in the file *MyFile.il*.
+
+```console
+ildasm MyFile.exe /output:MyFile.il
+```
+
+The following command disassembles the file `MyFile.exe` and displays the resulting IL Assembler text to the console window.
+
+```console
+ildasm MyFile.exe /text
+```
+
+If the file `MyApp.exe` contains embedded managed and unmanaged resources, the following command produces four files: *MyApp.il*, *MyApp.res*, *Icons.resources*, and *Message.resources*:
+
+```console
+ildasm MyApp.exe /output:MyApp.il
+```
+
+The following command disassembles the method `MyMethod` within the class `MyClass` in `MyFile.exe` and displays the output to the console window.
+
+```console
+ildasm /item:MyClass::MyMethod MyFile.exe /text
+```
+
+In the previous example, there could be several methods named `MyMethod` with different signatures. The following command disassembles the instance method `MyMethod` with the return type of **void** and the parameter types **int32** and **string**.
+
+```console
+ildasm /item:"MyClass::MyMethod(instance void(int32,string)" MyFile.exe /text
+```
+
+> [!NOTE]
+> In the .NET Framework versions 1.0 and 1.1, the left parenthesis that follows the method name must be balanced by a right parenthesis after the signature: `MyMethod(instance void(int32))`. Starting with the .NET Framework 2.0 the closing parenthesis must be omitted: `MyMethod(instance void(int32)`.
+
+To retrieve a `static` method (`Shared` method in Visual Basic), omit the keyword `instance`. Class types that are not primitive types like `int32` and `string` must include the namespace and must be preceded by the keyword `class`. External types must be preceded by the library name in square brackets. The following command disassembles a static method named `MyMethod` that has one parameter of type <xref:System.AppDomain> and has a return type of <xref:System.AppDomain>.
+
+```console
+ildasm /item:"MyClass::MyMethod(class [mscorlib]System.AppDomain(class [mscorlib]System.AppDomain)" MyFile.exe /text
+```
+
+A nested type must be preceded by its containing class, delimited by a forward slash. For example, if the `MyNamespace.MyClass` class contains a nested class named `NestedClass`, the nested class is identified as follows: `class MyNamespace.MyClass/NestedClass`.
+
+## See also
+
+- [Tools](index.md)
+- [Ilasm.exe (IL Assembler)](ilasm-exe-il-assembler.md)
+- [Managed Execution Process](../../standard/managed-execution-process.md)
+- [Developer command-line shells](/visualstudio/ide/reference/command-prompt-powershell)
