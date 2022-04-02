@@ -15,7 +15,7 @@ ms.assetid: db27f6b2-f1ec-499e-be3a-7eecf95ca42b
 
 The IL Disassembler is a companion tool to the IL Assembler (*Ilasm.exe*). *Ildasm.exe* takes a portable executable (PE) file that contains intermediate language (IL) code and creates a text file suitable as input to *Ilasm.exe*.
 
-This tool is automatically installed with Visual Studio. To run the tool, use [Visual Studio Developer Command Prompt or Visual Studio Developer PowerShell](/visualstudio/ide/reference/command-prompt-powershell).
+This tool is automatically installed with Visual Studio. To run the tool, use [Visual Studio Developer Command Prompt or Visual Studio Developer PowerShell](https://docs.microsoft.com/visualstudio/ide/reference/command-prompt-powershell).
 
 At the command prompt, type the following:
 
@@ -46,7 +46,7 @@ The following additional options are available for *.exe*, *.dll*, and *.winmd* 
 |**/linenum**|Includes references to original source lines.|
 |**/nobar**|Suppresses the disassembly progress indicator pop-up window.|
 |**/noca**|Suppresses the output of custom attributes.|
-|**/project**|Displays metadata the way it appears to managed code, instead of the way it appears in the native Windows Runtime. If `PEfilename` is not a Windows metadata (*.winmd*) file, this option has no effect. See [.NET Framework Support for Windows Store Apps and Windows Runtime](/previous-versions/dotnet/framework/cross-platform/support-for-windows-store-apps-and-windows-runtime).|
+|**/project**|Displays metadata the way it appears to managed code, instead of the way it appears in the native Windows Runtime. If `PEfilename` is not a Windows metadata (*.winmd*) file, this option has no effect. See [.NET Framework Support for Windows Store Apps and Windows Runtime](https://docs.microsoft.com/previous-versions/dotnet/framework/cross-platform/support-for-windows-store-apps-and-windows-runtime).|
 |**/pubonly**|Disassembles only public types and members. Equivalent to **/visibility:PUB**.|
 |**/quoteallnames**|Includes all names in single quotes.|
 |**/raweh**|Shows exception handling clauses in raw form.|
@@ -179,7 +179,7 @@ A nested type must be preceded by its containing class, delimited by a forward s
 
 ## See also
 
-- [Tools](index.md)
-- [Ilasm.exe (IL Assembler)](ilasm-exe-il-assembler.md)
-- [Managed Execution Process](../../standard/managed-execution-process.md)
-- [Developer command-line shells](/visualstudio/ide/reference/command-prompt-powershell)
+- [Tools](https://docs.microsoft.com/dotnet/framework/tools/)
+- [Ilasm.exe (IL Assembler)](https://docs.microsoft.com/dotnet/framework/tools/ilasm-exe-il-assembler)
+- [Managed Execution Process](https://docs.microsoft.com/en-us/dotnet/framework/tools/../../standard/managed-execution-process)
+- [Developer command-line shells](https://docs.microsoft.com/visualstudio/ide/reference/command-prompt-powershell)
